@@ -1,5 +1,6 @@
 package com.toledo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,23 @@ public class EventixService {
     }
     public List<FechaEventix> getFechas() {
         return repository.getFechas();
+    }
+
+    public List<Evento> filtrarPorTipo(String tipo) {
+        List<Evento> filtrado = new ArrayList<>();
+        for (Evento e : repository.readall()) {
+            if (e.getTipo().equalsIgnoreCase(tipo)) {
+                filtrado.add(e);
+            }
+        }
+        return filtrado;
+    }
+
+    public void deleteEvento(int id) {
+        repository.deleteById(id);
+    }
+
+    public void updateEvento(Evento evento) {
+        repository.update(evento);
     }
 }

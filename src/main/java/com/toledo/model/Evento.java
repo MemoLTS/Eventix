@@ -9,55 +9,37 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;        
 import lombok.Data; 
 
-import com.toledo.model.FechaEventix;
-
-@SuppressWarnings("unused")
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class Evento {
 
     private static AtomicInteger contador = new AtomicInteger(1);
 
-    
-    private int id;
+
+    private int id=contador.getAndIncrement();
 
     @NotBlank(message = "El titulo es obligatorio")
-    @Size(min = 2, max = 50, message = "El titulo debe tener entre 2 y 50 caracteres")  
+    @Size(min = 2, max = 100, message = "El titulo debe tener entre 2 y 50 caracteres")  
     private String title;
     @NotBlank(message = "La descripcion es obligatoria")
     @Size(min = 2, max = 50, message = "La descripcion debe tener entre 2 y 50 caracteres")
     private String description;
-    @NotBlank(message = "El estado es obligatorio")
-    @Size(min = 2, max = 50, message = "El estado debe ser completado o pendiente")
-    private String ubicacion;
     @Min(value = 1, message = "Debe ingresar una direccion valida")
     @Max(value = 100, message = "Debe ingresar una direccion valida")
-    private int capacidad;
+    private String ubicacion;
     @Min(value = 1, message = "La capacidad minima es 1")
-    @Max(value = 100, message = "La capacidad maxima es 100")
+    @Max(value = 100000, message = "La capacidad maxima es 100")
+    private int capacidad;
+    @NotBlank(message="El tipo es obligatorio")
+    @Size(min = 4, max = 20, message="El tipo debe tener entre 4 y 20 caracteres")
+    private String tipo;
+    @Min(value = 0, message = "Los asistentes deben ser 0 o más")
+    @Max(value = 100000, message = "Los asistentes no pueden superar la capacidad maxima")
     private int asistentes;
-    private FechaEventix f;
 
-    public Evento(String title, String description, String ubicacion, int capacidad) {
-        this.id = contador.getAndIncrement();
-        this.title = title;
-        this.description = description;
-        this.ubicacion = ubicacion;
-        this.capacidad = capacidad;
-        this.asistentes = 0; 
-    }
-
-    public int getDia() {
-        return f.getDia();
-    }
-    public int getMes() {
-        return f.getMes();
-    }
-
-    public int getAño() {
-        return f.getYear();
-    }
 
 }

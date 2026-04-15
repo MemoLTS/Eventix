@@ -1,6 +1,5 @@
 package com.toledo.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,8 +7,11 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,12 +29,24 @@ public class EventixController {
     @Autowired
     private EventixService service;
 
-    @GetMapping
+    @GetMapping("/eventos")
     public List<Evento> getAllEventos() {
         return service.getAllEventos();
     }
 
-    @PostMapping("/eventos")
+    @PostMapping("/deleteEvento/{id}")
+    public String deleteEvento(@PathVariable int id) {
+        service.deleteEvento(id);
+        return "Evento eliminado exitosamente";
+    }
+    @PostMapping("/updateEvento/{id}")
+    public String updateEvento(@PathVariable int id, @RequestBody Evento evento) {
+        evento.setId(id);
+        service.updateEvento(evento);
+        return "Evento actualizado exitosamente";
+    }
+    
+    @PostMapping("/createEvento")
     public ResponseEntity<String> createEvento(@Valid @RequestBody Evento evento) {
         service.createEvento(evento);
         return new ResponseEntity<>("Evento creado exitosamente", HttpStatus.CREATED);
@@ -43,9 +57,14 @@ public class EventixController {
         return new ResponseEntity<>(service.getFechas(), HttpStatus.OK);
     }
 
-    @PostMapping("/seed")
+    @GetMapping("/seed")
     public ResponseEntity<String> seed() {
         service.seed();
         return new ResponseEntity<>("Datos de seed cargados exitosamente", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/tipo/{tipo}")
+    public ResponseEntity<List<Evento>> getEventosByTipo(@PathVariable String tipo) {
+        return new ResponseEntity<>(service.filtrarPorTipo(tipo), HttpStatus.OK);
     }
 }
